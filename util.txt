@@ -1,0 +1,285 @@
+copying lines:
+1.commond : yy  => line is copied. to paste it use 'p' commond (p copies the line to next line . P copies before the line (cursor).
+2. to paste the copied line n time the use/press : np ie 3p (copied line will be pasted 3 times)
+3.undo commond : u
+4. dd : deletes the line
+5.) :set nu commond used to disply lines in numbers
+6) 3yy (nyy) : 3 lines are copied 
+7) 3yw : 3 words are copied. to past it user P(caps)
+8):/  another search commond
+9) :%s   : search and replace  
+ex:
+:%s/network/bash/   -> here network word replaced with bash.  (but its case sensitive. to replace all the words with caseseinsitive we have to user below commond
+
+:%s/network/bash/gi  (:2s/network/bash/gi will replace bash in second line.
+10):wq!  save and come out of the file
+11):q!  : dont save the modified file
+12) :w (to save the file as ,save as file.)
+exp: :w temp/newfile (file directory)
+
+--------------
+13)curl  commond is used to browse the url.
+ex: curl goole.com
+
+
+14) To download a file from online use below 
+ 
+curl -o apache-tomcat-9.0.10.tar.gz(file name) http://www-eu.apache.org/dist/tomcat/tomcat-9/v9.0.10/bin/apache-tomcat-9.0.10.tar.gz
+ 
+http://www-eu.apache.org/dist/tomcat/tomcat-9/v9.0.10/bin/apache-tomcat-9.0.10.tar.gz
+
+OR . We can download using wget commond as shown below.
+
+wget http://www-eu.apache.org/dist/tomcat/tomcat-9/v9.0.10/bin/apache-tomcat-9.0.10.tar.gz
+
+size: du -sh filename gives total size of thd directory 
+note : wget is not installed initially . to install in use below commond.
+sudo yum install wget -y
+
+some times we will have .bz2 files.
+to install it use : sudo yum install bzip2 -y
+ 
+ admin related:
+ -------------
+ 1)user management
+ 2)network management
+ 3)disk management
+ 4)package management
+ 5)service management
+ 6)file management
+ 
+ in lnux we have two different accounts
+ 1)root -adminstartor
+ 2)normal
+ 
+ to add group we should have root permission. to gain root permission user below commond.
+ ->sudo groupadd devops(group name)
+ to check the group added or not use below commond
+ -> cat /etc/group
+ 
+ to add user to the group use below commond.
+ ->sudo useradd -g devops(groupname) chandu(user name)
+ to check the created user use below commond
+ -> id chandu
+ 
+the result is :uid=1002(chandu) gid=1003(devops) groups=1003(devops)
+
+to add user chandu to other group use below one.
+-> sudo usermod -a -G sales chandu -> now user chandu is added to the sales group
+now chandu is added to two groups as shown below..
+->uid=1002(chandu) gid=1003(devops) groups=1003(devops),1004(sales)
+lst of user are available in /etc/password
+
+to move to root user use 
+
+->sudo su -	
+
+to logout use: -> logout
+to switch a user user -> su - chandu(user)
+to set password for the user use below :
+->sudo passwd chandu123(pwd)
+
+cat /var/log/secure
+
+Disk management
+-----------------
+
+sudo fdisk -l -> gives disk (partition on the system)
+output is: Disk /dev/sda
+-> to create a partition use: sudo fdisk /dev/sda
+it will ask for option , give m . and to create new partition give n option
+
+Inorder to use newly created partition we have to farmate it. use below commond to format.
+-> sudo mks /dev/sda1 (newly created partition)
+now the next step is to use partition we have to mount it.
+
+1)sudo mkdir /data
+2)sudo mount /dev/sda1 /data
+now got the data directory . (cd /data)
+
+df -h /df -hT  -> check disk size
+
+Network Management
+-------------------
+ip a -> gives ip address
+
+Package management
+----------------------
+in redhat packages are called rpms - redhat package management
+te
+To check what are all the packages(installed) available for update use below commond.
+-> sudo yum check-update
+
+there are 64 bit and 32 bit packages are available . we can install 32 package in 64 bit package . not vice-versa
+to check system is 64 or 32 bit . user below commond.
+-> uname -a 
+
+sample output :
+Linux devinstance 3.10.0-862.9.1.el7.x86_64 #1 SMP Mon Jul 16 16:29:36 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+
+To update package use below commond
+
+sudo yum update -y ( in real time we need shudown time.)
+sudo yum update package name -y (to update perticular package)
+sudo yum list installed (gives all installed packages)
+sudo yum list available (shows available packages to  install)
+sudo yum remove packagename -y(remove the package)
+
+(@packagename means that package is alredy installed, other wise its a package to be installed)
+
+-> packages are configured in repos files(cd /etc/yum.repos.d/)
+
+
+ERROR:
+
+.No free sectors available
+
+ /dev/sda1 is mounted; will not make a filesystem here!
+ 
+ 
+ 
+-------------------
+ A service is nothing but which servers something . like Databse service which is used by end user. 
+ 
+ Deamon server : which runs in the background.
+ 
+ ->sudo systemctl status sshd(service)
+ 
+ output : ● sshd.service - OpenSSH server daemon
+ To stop the service use below commond:
+ sudo systemctl stop sshd
+  To start the service use below commond:
+  sudo systemctl start sshd
+  
+ There are 0 to 65535 ports are there . and ther servuce can listen to any of the port.
+ 
+ -> sudo netstat -l  -> commond gives all the listeninh ports.
+-sudo netstat -lt 
+ -sudo netstat -ltn
+ 0 to 1023 are well know ports.
+ cat /etc/services
+ 
+ sudo yum install httpd(package) -y
+ 
+ NOTE: TO start any service that package should be install first.
+ 
+1) commond: sudo yum install httpd -y
+2)start the service -> sudo yum start httpd
+3) we can check whether the service is running or not by using below commond
+sudo systemctl list-units -t service | grep http ->
+
+to chec whether the port is opened by process/service use below.
+->sudo systemctl status httpd -> output : Main PID: 2096 (httpd)
+->sudo netstat -ltnp ->output : tcp6       0      0 :::80                   :::*                    LISTEN      2096/httpd          
+
+  here MainPID(2096) and LISTEN port(2069) are matching . it means that the port 2096 is used by httpd service.
+  
+ -> kill -l -> gives signals 
+ 
+ sudo reboot -> reboots/restar the system
+ 
+ File management
+ ----------------
+ ugo -owner group other
+ 
+ ugo+r sample ->  give read access to every one.
+
+ 
+
+CREATING WEBSERVER
+-------------------
+
+To create a webserver  
+
+curl -s https://raw.githubusercontent.com/linuxautomations/scripts/master/init.sh | sudo bash  
+
+
+afterexcuting the above common server will reboot. and after 15 secs reconnect.  to check the server is back use below command.
+
+-> uptime
+ 15:11:53 up 2 min,  1 user,  load average: 0.02, 0.03, 0.02
+
+ to shudown the server user command - > sudo init 0(zero)
+ 
+ while createing a image the server sould be down.
+
+ 
+ Intstalling webserver:
+ -----------------------
+ 1)switch to root user 
+ sudo su -
+ 2)yum install httpd(its package to install web server) -y
+ 3)start the webservice. before starting the service we should enable the service so that the service will start automatically whe system reboots.
+  systemctl enable httpd
+ 4)start httpd
+ systemctl sratt httpd .
+ 5)TO check whether the service is tarted or not use below
+ systemctl status httpd
+ 6)netstat -lntp  -> gives service port no.
+ 7)every service will have configuratoin file. 
+ cd /ect/httpd. and the conf.d file contains all the service information like listen port ects..
+ 8)we can change the configuratoin file but we should restart once to reflect the changes
+ 9)in conf.d file ->DocumetRoot is there which contains all the sources(webcontent).
+ ex: DocumentRoot "/var/www/html"
+10)in this directory we have to create indext.htm file . save the file and change the mode.
+11) to test it copy the external ip and put in the browser and u will get index.html content.
+12)loog file location -> /var/log
+
+Installing apache tomcat server( application sever)
+-------------------------------------------------
+1)before intallig tomcat check whether its available or not.
+yum list all | grep tomcat
+2) to install tomcat we require java,
+yum install java -yum
+3)yum install tomcat -y 
+4)systemctl enable tomcat
+5)systemctl status tomcat
+6)apache tomcat open 3 ports.
+7)in tomcat9 web content is availabe in -> /root/apache-tomcat-9.0.10/webapps
+8)log path for tomcat -> /root/apache-tomcat-9.0.10/logs -> it may differ version to version
+9)yum remove tomcat 
+10)deplopy your application in webapps folder.
+ex: webapps/student  -> to access the student application use below url.
+http://35.237.169.181:8080/student/
+
+Trainer Notes:
+==================
+
+We need total three servers.
+1. WebServer
+2. AppServer
+3. DBServer
+1. Install Web Server
+# yum install httpd -y
+# systemctl enable httpd
+# systemctl start httpd
+Open this server over browser wiht external ip address.
+
+2. Install App Server.
+# cd /root
+# wget http://www-us.apache.org/dist/tomcat/tomcat-9/v9.0.10/bin/apache-tomcat-9.0.10.tar.gz
+# tar -xf apache-tomcat-9.0.10.tar.gz
+# cd apache-tomcat-9.0.10/webapps
+# wget https://github.com/citb30/project-1/raw/master/student.war
+# cd /root/apache-tomcat-9.0.10/bin
+# sh startup.sh
+# tail -f /root/apache-tomcat-9.0.10/logs/catalina.out
+
+=====================================================
+
+11)TO Check apache tomcat application server running or not we have to grep java.
+ex: ps -ef | grep java -> it gives running processes of the server
+12) To check the server ports and default port is 8080 ->
+ netstat -lntp
+13) tomcat server service not registered with yum command .hence automatic restart of the server will not happen with systemctl command . inorder to do restart the
+server automatically we have to write out own script.
+ 13) to connect any DB we should dow the Driver
+ 14)install mariadb-server -your
+ yum install mariadb-server -your
+ systemctl enable mariadb
+ systemctl start mariadb
+ 
+
+
+
+ 
