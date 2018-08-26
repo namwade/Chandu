@@ -1,0 +1,14 @@
+- name: Demo on vars for complete play
+  hosts: all
+  vars:
+    URL: play.google.com
+  tasks:
+    - name: Access Variable
+      debug:
+        msg: "URL = {{URL}}"
+
+    - name: Access local variables
+      debug:
+        msg: "URL = {{URL}}"
+      vars:
+        URL: task.google.com

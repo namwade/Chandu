@@ -1,0 +1,8 @@
+- name: Access variables from hosts file
+  hosts: SAMPLE
+  #vars:
+  #  URL: google.com
+  tasks:
+    - name: Print URL from hosts
+      debug:
+        msg: "URL = {{URL}}"

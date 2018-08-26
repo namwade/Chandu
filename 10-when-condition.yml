@@ -1,0 +1,10 @@
+- name: Demo on when condition 
+  hosts: SAMPLE
+  tasks:
+    - debug:
+        msg: "OS = CentOS"
+      when: ansible_distribution == "CentOS"
+
+    - debug:
+        msg: "OS = Debain"
+      when: ansible_distribution == "Debain"

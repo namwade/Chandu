@@ -1,0 +1,6 @@
+- name: Access variables from command of ansible-playbook
+  hosts: all
+  tasks:
+    - name: Print URL from Command line 
+      debug:
+        msg: "URL = {{URL}}"

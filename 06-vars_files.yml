@@ -1,0 +1,8 @@
+- name: Access variables from vars_files
+  hosts: all
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Print URL from vars_files file 
+      debug:
+        msg: "URL = {{URL}}"

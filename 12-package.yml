@@ -1,0 +1,8 @@
+- name: Install a package 
+  hosts: SAMPLE
+  become: yes
+  tasks:
+    - name: Install package 
+      package:
+        name: bc 
+        state: latest

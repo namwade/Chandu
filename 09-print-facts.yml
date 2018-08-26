@@ -1,0 +1,7 @@
+- name: Print facts
+  hosts: SAMPLE
+  tasks:
+    - name: Print facts 
+      debug:
+        msg: "GATEWAY = {{ansible_default_ipv4.gateway}}, OS = {{ansible_distribution}}"
+

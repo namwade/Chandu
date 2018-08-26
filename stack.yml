@@ -1,0 +1,59 @@
+- name: Configure MariaDB 
+  hosts: SAMPLE
+  become: yes
+  tags: DB 
+  tasks:
+    - name: Install Mariadb 
+      package:
+        name: "{{item}}" 
+        state: latest 
+      loop:
+        - mariadb-server
+        - MySQL-python
+
+    - name: Start MariaDB Service
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    - name: Copy sql file 
+      copy:
+        src: student.sql
+        dest: /tmp/student.sql 
+
+    - name: Create database studentapp
+      mysql_db:
+        name: studentapp
+        state: present 
+      
+    - name: Add student user
+      mysql_user:
+        name: student
+        password: student@1
+        priv: 'studentapp.*:ALL'
+        state: present
+
+    - name: Create database schema
+      mysql_db:
+        state: import
+        name: studentapp
+        target: /tmp/student.sql
+
+- name: Configure Tomcat
+  hosts: SAMPLE
+  become: yes
+  tags: APP
+  vars:
+    TURL: "http://www-us.apache.org/dist/tomcat/tomcat-9/v9.0.11/bin/apache-tomcat-9.0.11.tar.gz"
+    TTAR: "{{ TURL.split('/') | last }}"
+  tasks:
+    - name: Install Java 
+      package:
+        name: java
+        state: installed 
+
+    - name: Download Tomcat 
+      get_url:
+        url: "{{ TURL }}"
+        dest: "/opt/{{TTAR}}"
